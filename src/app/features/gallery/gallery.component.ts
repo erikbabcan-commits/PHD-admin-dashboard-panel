@@ -4,11 +4,12 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SalonDataService } from '../../core/data';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, RouterLink, RouterLinkActive, FooterComponent],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, RouterLinkActive, FooterComponent, ClientHeaderComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

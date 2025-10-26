@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, inject, signal, computed, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { SalonDataService } from '../../core/data';
@@ -7,15 +7,16 @@ import { SalonService, Stylist, Appointment } from '../../core/models';
 import { NotificationService, AuthService } from '../../core/services';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { switchMap, of, startWith, map } from 'rxjs';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
 
 type BookingStep = '1-service' | '2-stylist' | '3-time' | '4-confirm' | '5-booked';
 
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink, SpinnerComponent, FooterComponent],
+  imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink, SpinnerComponent, FooterComponent, ClientHeaderComponent],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,13 +39,23 @@ export class BookingComponent {
   currentUser = this.authService.currentUser;
 
   // --- Reactive Data Loading ---
+  isLoadingStylists = signal(false);
   private stylistsForService$ = toObservable(this.selectedService).pipe(
-    switchMap(service => 
-      service ? this.salonDataService.getStylistsForService(service.id) : []
-    )
+    switchMap(service => {
+      if (!service) return of([]);
+      this.isLoadingStylists.set(true);
+      return this.salonDataService.getStylistsForService(service.id).pipe(
+        map(stylists => {
+          this.isLoadingStylists.set(false);
+          return stylists;
+        }),
+        startWith([]) // Ensure initial empty array for `toSignal` before first value
+      );
+    })
   );
   stylistsForService = toSignal(this.stylistsForService$, { initialValue: [] });
 
+  isLoadingTimeSlots = signal(false);
   private timeSlotsTrigger = computed(() => ({
     stylist: this.selectedStylist(),
     date: this.selectedDate(),
@@ -53,8 +64,15 @@ export class BookingComponent {
 
   private availableTimeSlots$ = toObservable(this.timeSlotsTrigger).pipe(
     switchMap(({ stylist, date, service }) => {
-      if (!stylist || !date || !service) return [];
-      return this.salonDataService.getAvailableTimeSlots(stylist.id, date, service.duration);
+      if (!stylist || !date || !service) return of([]);
+      this.isLoadingTimeSlots.set(true);
+      return this.salonDataService.getAvailableTimeSlots(stylist.id, date, service.duration).pipe(
+        map(slots => {
+          this.isLoadingTimeSlots.set(false);
+          return slots;
+        }),
+        startWith([]) // Ensure initial empty array for `toSignal` before first value
+      );
     })
   );
   availableTimeSlots = toSignal(this.availableTimeSlots$, { initialValue: [] });

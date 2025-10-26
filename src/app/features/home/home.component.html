@@ -7,19 +7,7 @@
   <div class="absolute inset-0 bg-brand-dark/80 z-10"></div>
   
   <div class="relative z-20 flex flex-col items-center w-full">
-    <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-center w-full container mx-auto">
-        <div class="text-2xl font-bold text-gold tracking-widest">
-            PAPI
-        </div>
-        <nav class="hidden md:flex gap-6 text-lg">
-            <a routerLink="/booking" class="text-white hover:text-gold transition-colors duration-300">Rezervovať</a>
-            <a routerLink="/stylists" class="text-white hover:text-gold transition-colors duration-300">Stylisti</a>
-            <a routerLink="/products" class="text-white hover:text-gold transition-colors duration-300">Produkty</a>
-            <a routerLink="/gallery" class="text-white hover:text-gold transition-colors duration-300">Galéria</a>
-            <a routerLink="/my-appointments" class="text-white hover:text-gold transition-colors duration-300">Moje Termíny</a>
-            <a routerLink="/contact" class="text-white hover:text-gold transition-colors duration-300">Kontakt</a>
-        </nav>
-    </header>
+    <app-client-header></app-client-header>
     
     <main class="flex flex-col items-center justify-center flex-grow pt-20">
       <h1 class="text-6xl md:text-8xl font-extrabold text-white mb-4 leading-tight animate-fade-in-up">

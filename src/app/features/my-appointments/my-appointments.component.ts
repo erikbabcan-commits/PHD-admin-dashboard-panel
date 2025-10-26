@@ -1,18 +1,20 @@
 
-import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, computed, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, of } from 'rxjs';
+import { switchMap, of, startWith, map } from 'rxjs';
 import { AuthService, NotificationService } from '../../core/services';
 import { SalonDataService } from '../../core/data';
 import { Appointment } from '../../core/models';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-my-appointments',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink, FooterComponent],
+  imports: [CommonModule, DatePipe, RouterLink, FooterComponent, ClientHeaderComponent, SpinnerComponent],
   templateUrl: './my-appointments.component.html',
   styleUrls: ['./my-appointments.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,10 +24,18 @@ export class MyAppointmentsComponent {
   private salonDataService = inject(SalonDataService);
   private notificationService = inject(NotificationService);
   
+  isLoadingAppointments = signal(false);
   private appointments$ = this.authService.currentUser.pipe(
     switchMap(user => {
       if (!user) return of([]);
-      return this.salonDataService.getUserAppointments(user.uid);
+      this.isLoadingAppointments.set(true);
+      return this.salonDataService.getUserAppointments(user.uid).pipe(
+        map(appts => {
+          this.isLoadingAppointments.set(false);
+          return appts;
+        }),
+        startWith([]) // Ensure initial empty array for `toSignal` before first value
+      );
     })
   );
   private appointments = toSignal(this.appointments$, { initialValue: [] });
