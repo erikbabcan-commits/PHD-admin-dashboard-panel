@@ -1,12 +1,13 @@
 
 
+
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-spinner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule], // CommonModule is needed for @if
   template: `
     <div role="status" class="flex flex-col justify-center items-center gap-4 py-8">
       <div class="w-10 h-10 border-4 border-dashed rounded-full animate-spin border-gold"></div>

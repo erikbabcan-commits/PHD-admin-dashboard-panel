@@ -1,12 +1,11 @@
 
 
+
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SalonDataService } from '../../core/data';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { FooterComponent, ClientHeaderComponent, SpinnerComponent } from '../../shared/components'; // Updated import paths
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, of, delay, startWith } from 'rxjs';
 

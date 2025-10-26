@@ -1,15 +1,15 @@
 
+
+
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { SalonDataService } from '../../core/data';
 import { SalonService, Stylist, Appointment } from '../../core/models';
 import { NotificationService, AuthService } from '../../core/services';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { SpinnerComponent, FooterComponent, ClientHeaderComponent } from '../../shared/components'; // Updated import paths
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap, of, startWith, map } from 'rxjs';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
 
 type BookingStep = '1-service' | '2-stylist' | '3-time' | '4-confirm' | '5-booked';
 

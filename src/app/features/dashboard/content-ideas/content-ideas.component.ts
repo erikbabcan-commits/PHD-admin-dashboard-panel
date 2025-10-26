@@ -1,9 +1,10 @@
 
+
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { GeminiService, ContentIdea, NotificationService } from '../../../core/services';
-import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { SpinnerComponent } from '../../../shared/components'; // Updated import path
 
 @Component({
   selector: 'app-content-ideas',

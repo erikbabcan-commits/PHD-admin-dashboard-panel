@@ -1,4 +1,5 @@
-import { Injectable, signal, inject } from '@angular/core';
+
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { UserProfile } from '../models';
 import { SalonDataService } from '../data';
 
@@ -8,19 +9,27 @@ import { SalonDataService } from '../data';
 export class AuthService {
   private dataService = inject(SalonDataService);
 
-  private _currentUser = signal<UserProfile | null>(null);
-  public readonly currentUser = this._currentUser.asReadonly();
+  private _loggedInUserId = signal<string | null>(null);
+
+  public readonly currentUser = computed(() => {
+    const userId = this._loggedInUserId();
+    if (!userId) {
+      return null;
+    }
+    // This will react to changes in dataService.users() because it's a signal
+    return this.dataService.users().find(u => u.uid === userId) || null;
+  });
 
   simulateLogin(userId: string) {
-    const user = this.dataService.getUser(userId);
-    if (user) {
-      this._currentUser.set(user);
-    } else {
-      console.error(`Login failed: User with ID ${userId} not found.`);
+    this._loggedInUserId.set(userId);
+    // No need to explicitly fetch here, computed will handle it
+    // Add a check to ensure the user exists after login attempt
+    if (!this.dataService.getUser(userId)) {
+       console.error(`Login failed: User with ID ${userId} not found.`);
     }
   }
 
   logout() {
-    this._currentUser.set(null);
+    this._loggedInUserId.set(null);
   }
 }

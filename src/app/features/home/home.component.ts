@@ -1,11 +1,11 @@
 
 
+
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { SalonDataService } from '../../core/data';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
-import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
+import { FooterComponent, ClientHeaderComponent } from '../../shared/components'; // Updated import paths
 import { AboutComponent } from '../about/about.component';
 
 @Component({

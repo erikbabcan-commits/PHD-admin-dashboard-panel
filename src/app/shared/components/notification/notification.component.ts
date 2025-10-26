@@ -1,7 +1,7 @@
 
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../../core/services/notification.service';
+import { NotificationService } from '../../core/services/notification.service'; // Changed to direct file import
 
 @Component({
   selector: 'app-notification',

@@ -1,6 +1,7 @@
+
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NotificationComponent } from './shared/components/notification/notification.component';
+import { NotificationComponent } from './shared/components'; // Updated import path
 import { AuthService } from './core/services/auth.service';
 
 @Component({

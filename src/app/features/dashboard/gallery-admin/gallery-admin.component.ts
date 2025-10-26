@@ -1,10 +1,11 @@
+
 import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { SalonDataService } from '../../../core/data';
 import { NotificationService } from '../../../core/services';
 import { GalleryItem } from '../../../core/models';
 import { GalleryItemModalComponent } from '../gallery-item-modal/gallery-item-modal.component';
-import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { SpinnerComponent } from '../../../shared/components'; // Updated import path
 import { toSignal } from '@angular/core/rxjs-interop';
 import { of, delay, switchMap, startWith, finalize, map } from 'rxjs';
 
