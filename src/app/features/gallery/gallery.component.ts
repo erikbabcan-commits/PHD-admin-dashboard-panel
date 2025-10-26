@@ -1,12 +1,14 @@
+
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SalonDataService } from '../../core/data';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, RouterLink, RouterLinkActive],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, RouterLinkActive, FooterComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

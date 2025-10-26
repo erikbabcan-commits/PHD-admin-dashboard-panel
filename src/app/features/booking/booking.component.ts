@@ -1,3 +1,4 @@
+
 import { Component, ChangeDetectionStrategy, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
@@ -7,13 +8,14 @@ import { NotificationService, AuthService } from '../../core/services';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 type BookingStep = '1-service' | '2-stylist' | '3-time' | '4-confirm' | '5-booked';
 
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink, SpinnerComponent],
+  imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink, SpinnerComponent, FooterComponent],
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

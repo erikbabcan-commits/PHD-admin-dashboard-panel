@@ -1,3 +1,4 @@
+
 import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -6,11 +7,12 @@ import { switchMap, of } from 'rxjs';
 import { AuthService, NotificationService } from '../../core/services';
 import { SalonDataService } from '../../core/data';
 import { Appointment } from '../../core/models';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-my-appointments',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink],
+  imports: [CommonModule, DatePipe, RouterLink, FooterComponent],
   templateUrl: './my-appointments.component.html',
   styleUrls: ['./my-appointments.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

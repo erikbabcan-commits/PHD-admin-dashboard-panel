@@ -1,4 +1,5 @@
 
+@let footerExists = true;
 <div class="relative min-h-screen flex flex-col items-center justify-center text-center p-8 overflow-hidden">
   <!-- Background Image -->
   <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('https://picsum.photos/seed/salon-bg/1920/1080');"></div>
@@ -16,6 +17,7 @@
             <a routerLink="/products" class="text-white hover:text-gold transition-colors duration-300">Produkty</a>
             <a routerLink="/gallery" class="text-white hover:text-gold transition-colors duration-300">Galéria</a>
             <a routerLink="/my-appointments" class="text-white hover:text-gold transition-colors duration-300">Moje Termíny</a>
+            <a routerLink="/contact" class="text-white hover:text-gold transition-colors duration-300">Kontakt</a>
         </nav>
     </header>
     
@@ -82,3 +84,5 @@
         </a>
     </div>
 </section>
+
+<app-footer></app-footer>
