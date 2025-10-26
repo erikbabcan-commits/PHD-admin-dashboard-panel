@@ -1,0 +1,40 @@
+<div class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center animate-fade-in p-4" (click)="onClose()">
+  <div class="bg-brand-dark border border-gold/20 rounded-lg shadow-xl w-full max-w-lg relative animate-zoom-in text-left flex flex-col" (click)="$event.stopPropagation()">
+    <header class="p-6 border-b border-gold/20 flex justify-between items-center">
+      <h3 class="text-2xl font-bold text-gold">{{ isEditMode ? 'Upraviť Klienta' : 'Pridať Nového Klienta' }}</h3>
+      <button (click)="onClose()" class="text-gray-400 hover:text-white transition-colors" aria-label="Zavrieť">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </header>
+
+    <form [formGroup]="clientForm" (ngSubmit)="onSave()" class="p-6 space-y-4">
+      <div>
+        <label for="name" class="block text-sm font-medium text-brand-light/80 mb-2">Celé Meno</label>
+        <input type="text" id="name" formControlName="name" class="w-full bg-brand-dark/80 border border-gray-600 rounded-md p-3 text-white focus:ring-gold focus:border-gold">
+         @if(clientForm.get('name')?.invalid && clientForm.get('name')?.touched) {
+          <p class="text-red-400 text-sm mt-1">Meno je povinné.</p>
+        }
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-brand-light/80 mb-2">Emailová Adresa</label>
+        <input type="email" id="email" formControlName="email" class="w-full bg-brand-dark/80 border border-gray-600 rounded-md p-3 text-white focus:ring-gold focus:border-gold">
+         @if(clientForm.get('email')?.invalid && clientForm.get('email')?.touched) {
+          <p class="text-red-400 text-sm mt-1">Prosím, zadajte platnú emailovú adresu.</p>
+        }
+      </div>
+       <div>
+        <label for="phone" class="block text-sm font-medium text-brand-light/80 mb-2">Telefónne Číslo (nepovinné)</label>
+        <input type="tel" id="phone" formControlName="phone" class="w-full bg-brand-dark/80 border border-gray-600 rounded-md p-3 text-white focus:ring-gold focus:border-gold">
+      </div>
+      
+      <footer class="pt-6 flex justify-end gap-4 border-t border-gold/20">
+        <button type="button" (click)="onClose()" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-500 transition-colors duration-300">
+          Zrušiť
+        </button>
+        <button type="submit" [disabled]="clientForm.invalid" class="bg-gold text-brand-dark font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed">
+          Uložiť Klienta
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

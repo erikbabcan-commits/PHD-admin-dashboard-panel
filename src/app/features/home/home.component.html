@@ -1,0 +1,84 @@
+
+<div class="relative min-h-screen flex flex-col items-center justify-center text-center p-8 overflow-hidden">
+  <!-- Background Image -->
+  <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('https://picsum.photos/seed/salon-bg/1920/1080');"></div>
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-brand-dark/80 z-10"></div>
+  
+  <div class="relative z-20 flex flex-col items-center w-full">
+    <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-center w-full container mx-auto">
+        <div class="text-2xl font-bold text-gold tracking-widest">
+            PAPI
+        </div>
+        <nav class="hidden md:flex gap-6 text-lg">
+            <a routerLink="/booking" class="text-white hover:text-gold transition-colors duration-300">Rezervovať</a>
+            <a routerLink="/stylists" class="text-white hover:text-gold transition-colors duration-300">Stylisti</a>
+            <a routerLink="/products" class="text-white hover:text-gold transition-colors duration-300">Produkty</a>
+            <a routerLink="/gallery" class="text-white hover:text-gold transition-colors duration-300">Galéria</a>
+            <a routerLink="/my-appointments" class="text-white hover:text-gold transition-colors duration-300">Moje Termíny</a>
+        </nav>
+    </header>
+    
+    <main class="flex flex-col items-center justify-center flex-grow pt-20">
+      <h1 class="text-6xl md:text-8xl font-extrabold text-white mb-4 leading-tight animate-fade-in-up">
+        <span class="text-gold">PAPI</span> Hair Design
+      </h1>
+      <p class="text-xl md:text-2xl text-brand-light/80 max-w-2xl mb-10 animate-fade-in-up" style="animation-delay: 200ms;">
+        Zažite umenie vlasového stylingu v našom luxusnom salóne. Moderné trendy, prémiová starostlivosť a osobný prístup.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-6 animate-fade-in-up" style="animation-delay: 400ms;">
+        <a routerLink="/booking" class="bg-gold text-brand-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 shadow-lg">
+          Rezervovať Termín
+        </a>
+        <a routerLink="/dashboard" class="border-2 border-gold text-gold font-bold text-lg py-4 px-10 rounded-full hover:bg-gold hover:text-brand-dark transform hover:scale-105 transition-all duration-300 shadow-lg">
+          Admin Panel
+        </a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Stylists Preview Section -->
+<section class="bg-brand-dark py-20 px-4">
+  <div class="container mx-auto text-center">
+    <h2 class="text-4xl font-bold text-gold mb-4">Zoznámte sa s Našimi Stylistami</h2>
+    <p class="text-lg text-brand-light/70 max-w-2xl mx-auto mb-12">Náš tím tvoria talentovaní a vášniví profesionáli, ktorí vám pomôžu dosiahnuť váš vysnívaný vzhľad.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+      @for(stylist of stylists().slice(0, 2); track stylist.id) {
+        <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-hidden text-center flex flex-col items-center p-8 border border-gold/10">
+          <img [ngSrc]="stylist.imageUrl" [alt]="stylist.name" width="150" height="150" class="w-40 h-40 rounded-full object-cover border-4 border-gold/50 mb-4">
+          <h3 class="text-2xl font-bold text-white">{{ stylist.name }}</h3>
+          <p class="text-gold mb-4">{{ stylist.title }}</p>
+          <p class="text-brand-light/70">{{ stylist.description }}</p>
+        </div>
+      }
+    </div>
+    <a routerLink="/stylists" class="mt-12 inline-block bg-transparent border-2 border-gold text-gold font-bold py-3 px-8 rounded-full hover:bg-gold hover:text-brand-dark transition-colors duration-300">
+      Zobraziť Všetkých Stylistov
+    </a>
+  </div>
+</section>
+
+<!-- Products Preview Section -->
+<section class="bg-black/20 py-20 px-4">
+    <div class="container mx-auto text-center">
+        <h2 class="text-4xl font-bold text-gold mb-4">Naše Prémiové Produkty</h2>
+        <p class="text-lg text-brand-light/70 max-w-2xl mx-auto mb-12">Používame a predávame len tie najkvalitnejšie produkty pre zdravie a krásu vašich vlasov.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            @for (product of products().slice(0, 3); track product.id) {
+                <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-hidden flex flex-col group border border-gold/10">
+                    <img [ngSrc]="product.imageUrl" [alt]="product.name" width="400" height="400" class="w-full h-64 object-cover">
+                    <div class="p-6 flex-grow flex flex-col text-left">
+                        <h3 class="text-xl font-bold text-white mb-2">{{ product.name }}</h3>
+                        <p class="text-brand-light/70 text-sm mb-4 flex-grow">{{ product.description }}</p>
+                        <span class="text-2xl font-bold text-gold mt-2">{{ product.price | currency:'EUR':'symbol' }}</span>
+                    </div>
+                </div>
+            }
+        </div>
+        <a routerLink="/products" class="mt-12 inline-block bg-gold text-brand-dark font-bold py-3 px-8 rounded-full hover:bg-yellow-300 transition-colors duration-300">
+            Zobraziť Všetky Produkty
+        </a>
+    </div>
+</section>

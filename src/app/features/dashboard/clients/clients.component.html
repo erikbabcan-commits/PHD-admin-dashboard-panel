@@ -1,0 +1,48 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold text-gold">Správa Klientov</h1>
+  <button (click)="openModal()" class="bg-gold text-brand-dark font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all duration-300">
+    Pridať Klienta
+  </button>
+</div>
+
+@if (clients().length > 0) {
+  <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="bg-black/30">
+        <tr>
+          <th class="p-4 font-semibold">Meno</th>
+          <th class="p-4 font-semibold">Email</th>
+          <th class="p-4 font-semibold">Telefón</th>
+          <th class="p-4 font-semibold text-right">Vernostné Body</th>
+          <th class="p-4 font-semibold text-center">Akcie</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gold/20">
+        @for (client of clients(); track client.uid) {
+          <tr class="hover:bg-gold/5 transition-colors duration-200">
+            <td class="p-4">{{ client.name }}</td>
+            <td class="p-4">{{ client.email }}</td>
+            <td class="p-4">{{ client.phone || '-' }}</td>
+            <td class="p-4 text-right font-mono">{{ client.loyaltyPoints }}</td>
+            <td class="p-4 text-center">
+              <button (click)="openModal(client)" class="text-blue-400 hover:underline mr-4">Upraviť</button>
+              <button (click)="handleDelete(client)" class="text-red-400 hover:underline">Vymazať</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <div class="bg-brand-dark/50 p-8 rounded-lg text-center text-brand-light/70">
+    <p>Nenašli sa žiadni klienti.</p>
+  </div>
+}
+
+@if(isModalOpen()) {
+  <app-client-modal 
+    [user]="editingClient()" 
+    (save)="handleSave($event)" 
+    (close)="closeModal()">
+  </app-client-modal>
+}

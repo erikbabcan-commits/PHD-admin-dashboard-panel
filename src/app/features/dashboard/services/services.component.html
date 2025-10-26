@@ -1,0 +1,49 @@
+
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold text-gold">Správa Služieb</h1>
+  <button (click)="openModal()" class="bg-gold text-brand-dark font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all duration-300">
+    Pridať Službu
+  </button>
+</div>
+
+@if (services().length > 0) {
+  <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-x-auto">
+    <table class="w-full text-left">
+      <thead class="bg-black/30">
+        <tr>
+          <th class="p-4 font-semibold">Názov Služby</th>
+          <th class="p-4 font-semibold">Kategória</th>
+          <th class="p-4 font-semibold text-right">Trvanie (min)</th>
+          <th class="p-4 font-semibold text-right">Cena</th>
+          <th class="p-4 font-semibold text-center">Akcie</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gold/20">
+        @for (service of services(); track service.id) {
+          <tr class="hover:bg-gold/5 transition-colors duration-200">
+            <td class="p-4">{{ service.name }}</td>
+            <td class="p-4">{{ service.category }}</td>
+            <td class="p-4 text-right font-mono">{{ service.duration }}</td>
+            <td class="p-4 text-right font-mono">{{ service.price | currency:'EUR':'symbol' }}</td>
+            <td class="p-4 text-center">
+              <button (click)="openModal(service)" class="text-blue-400 hover:underline mr-4">Upraviť</button>
+              <button (click)="handleDelete(service)" class="text-red-400 hover:underline">Vymazať</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <div class="bg-brand-dark/50 p-8 rounded-lg text-center text-brand-light/70">
+    <p>Nenašli sa žiadne služby.</p>
+  </div>
+}
+
+@if(isModalOpen()) {
+  <app-service-modal 
+    [service]="editingService()" 
+    (save)="handleSave($event)" 
+    (close)="closeModal()">
+  </app-service-modal>
+}

@@ -1,7 +1,7 @@
-
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NotificationComponent } from './shared/components/notification/notification.component';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,4 +15,10 @@ import { NotificationComponent } from './shared/components/notification/notifica
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {}
+export class AppComponent {
+  private authService = inject(AuthService);
+
+  constructor() {
+    this.authService.simulateLogin('user-1'); // Auto-login a default user
+  }
+}

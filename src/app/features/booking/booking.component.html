@@ -1,0 +1,172 @@
+
+<!-- Header -->
+<header class="bg-brand-dark/80 backdrop-blur-sm sticky top-0 z-30 shadow-lg border-b border-gold/10">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a routerLink="/" class="text-2xl font-bold text-gold tracking-widest">
+            PAPI
+        </a>
+        <div class="hidden md:flex gap-6 text-lg">
+            <a routerLink="/booking" routerLinkActive="text-gold font-semibold" class="text-white hover:text-gold transition-colors duration-300">Rezervovať</a>
+            <a routerLink="/stylists" routerLinkActive="text-gold font-semibold" class="text-white hover:text-gold transition-colors duration-300">Stylisti</a>
+            <a routerLink="/products" routerLinkActive="text-gold font-semibold" class="text-white hover:text-gold transition-colors duration-300">Produkty</a>
+            <a routerLink="/gallery" routerLinkActive="text-gold font-semibold" class="text-white hover:text-gold transition-colors duration-300">Galéria</a>
+            <a routerLink="/my-appointments" routerLinkActive="text-gold font-semibold" class="text-white hover:text-gold transition-colors duration-300">Moje Termíny</a>
+        </div>
+    </nav>
+</header>
+
+<div class="container mx-auto p-4 md:p-8">
+    
+    @switch (currentStep()) {
+        <!-- STEP 1: SELECT SERVICE -->
+        @case ('1-service') {
+            <div class="animate-fade-in-up">
+                <h1 class="text-3xl md:text-4xl font-bold text-gold text-center mb-2">Vyberte si Službu</h1>
+                <p class="text-center text-brand-light/70 mb-8">Začnite svoju cestu za dokonalým vzhľadom.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @for (service of services(); track service.id) {
+                        <button (click)="selectService(service)" class="bg-brand-dark/50 p-6 rounded-lg text-left border border-gold/10 hover:border-gold hover:bg-gold/5 transition-all duration-300 transform hover:-translate-y-1 shadow-lg">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-bold text-white">{{ service.name }}</h3>
+                                <span class="text-lg font-mono text-gold">{{ service.price | currency:'EUR':'symbol' }}</span>
+                            </div>
+                            <p class="text-brand-light/70 mt-2">{{ service.duration }} minút • {{ service.category }}</p>
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- STEP 2: SELECT STYLIST -->
+        @case ('2-stylist') {
+             <div class="animate-fade-in-up">
+                <button (click)="goBack()" class="flex items-center gap-2 text-gold mb-6 hover:underline">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Späť na výber služby
+                </button>
+                <h1 class="text-3xl md:text-4xl font-bold text-gold text-center mb-2">Vyberte si Stylistu</h1>
+                <p class="text-center text-brand-light/70 mb-8">Naši experti sú pripravení splniť vaše priania.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @for(stylist of stylistsForService(); track stylist.id) {
+                        <button (click)="selectStylist(stylist)" class="bg-brand-dark/50 rounded-lg shadow-lg overflow-hidden text-left border border-gold/10 hover:border-gold transition-all duration-300 transform hover:scale-105">
+                            <img [src]="stylist.imageUrl" [alt]="stylist.name" class="w-full h-72 object-cover">
+                            <div class="p-4">
+                                <h3 class="text-2xl font-bold text-white">{{ stylist.name }}</h3>
+                                <p class="text-gold">{{ stylist.title }}</p>
+                            </div>
+                        </button>
+                    }
+                </div>
+             </div>
+        }
+
+        <!-- STEP 3: SELECT TIME -->
+        @case ('3-time') {
+            <div class="animate-fade-in-up">
+                 <button (click)="goBack()" class="flex items-center gap-2 text-gold mb-6 hover:underline">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Späť na výber stylistu
+                </button>
+                <h1 class="text-3xl md:text-4xl font-bold text-gold text-center mb-8">Vyberte si Dátum a Čas</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Calendar -->
+                    <div class="bg-brand-dark/50 p-4 rounded-lg border border-gold/10">
+                        <div class="flex justify-between items-center mb-4">
+                            <button (click)="previousMonth()" class="p-2 rounded-full hover:bg-gold/10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                            <h3 class="text-xl font-bold text-white">{{ currentMonth() | date:'LLLL yyyy' }}</h3>
+                            <button (click)="nextMonth()" class="p-2 rounded-full hover:bg-gold/10"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center">
+                            @for(day of weekdays; track day) { <div class="font-semibold text-gold text-sm">{{day}}</div> }
+                            @for(day of calendarDays(); track $index) {
+                                @if (day.getTime() > 0) {
+                                    <button (click)="selectDate(day)" 
+                                        [disabled]="isPastDate(day)"
+                                        class="h-10 w-10 flex items-center justify-center rounded-full transition-colors"
+                                        [class.bg-gold]="isSelectedDate(day)"
+                                        [class.text-brand-dark]="isSelectedDate(day)"
+                                        [class.hover:bg-gold/20]="!isSelectedDate(day) && !isPastDate(day)"
+                                        [class.text-brand-light/40]="isPastDate(day)"
+                                        [class.cursor-not-allowed]="isPastDate(day)"
+                                        [class.font-bold]="isToday(day)">
+                                        {{ day | date:'d' }}
+                                    </button>
+                                } @else {
+                                    <div></div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <!-- Time Slots -->
+                    <div class="flex flex-col">
+                        @if (selectedDate()) {
+                            <h3 class="text-xl font-bold text-center mb-4 text-white">Dostupné časy pre <br>{{ selectedDate() | date:'d. MMMM' }}</h3>
+                            <div class="grid grid-cols-3 gap-3 overflow-y-auto max-h-80 pr-2">
+                                @for(time of availableTimeSlots(); track time) {
+                                    <button (click)="selectTime(time)" class="bg-brand-dark/50 border border-gold/20 hover:bg-gold hover:text-brand-dark hover:border-gold text-white font-semibold py-3 px-2 rounded-lg transition-all duration-200">
+                                        {{ time | date:'HH:mm' }}
+                                    </button>
+                                }
+                                @if(availableTimeSlots().length === 0) {
+                                    <p class="col-span-3 text-center text-brand-light/70 mt-4">Na tento deň nie sú k dispozícii žiadne voľné termíny.</p>
+                                }
+                            </div>
+                        } @else {
+                             <div class="flex items-center justify-center h-full bg-brand-dark/30 rounded-lg">
+                                <p class="text-brand-light/70">Prosím, vyberte dátum.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        
+        <!-- STEP 4: CONFIRMATION -->
+        @case ('4-confirm') {
+             <div class="max-w-xl mx-auto text-center animate-fade-in-up">
+                 <button (click)="goBack()" class="flex items-center gap-2 text-gold mb-6 hover:underline mx-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Späť na výber času
+                </button>
+                <h1 class="text-3xl md:text-4xl font-bold text-gold mb-6">Potvrdenie Rezervácie</h1>
+                <div class="bg-brand-dark/50 rounded-lg p-8 space-y-4 border border-gold/20 text-left">
+                    <div class="flex justify-between items-center pb-4 border-b border-gold/20">
+                        <span class="text-brand-light/70">Klient:</span>
+                        <span class="text-xl font-bold text-white">{{ currentUser()?.name }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-gold/20">
+                        <span class="text-brand-light/70">Služba:</span>
+                        <span class="text-xl font-bold text-white">{{ selectedService()?.name }}</span>
+                    </div>
+                    <div class="flex justify-between items-center pb-4 border-b border-gold/20">
+                        <span class="text-brand-light/70">Stylista:</span>
+                        <span class="text-xl font-bold text-white">{{ selectedStylist()?.name }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-brand-light/70">Dátum a čas:</span>
+                        <span class="text-xl font-bold text-white">{{ selectedTime() | date:'d. MMMM yyyy, HH:mm' }}</span>
+                    </div>
+                </div>
+                <div class="mt-8 flex flex-col items-center gap-4">
+                     <button (click)="confirmBooking()" class="bg-gold text-brand-dark font-bold text-lg py-4 px-10 rounded-full hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 shadow-lg w-full">
+                        Potvrdiť a Rezervovať
+                    </button>
+                    <button (click)="startOver()" class="text-gray-400 hover:text-white">Začať odznova</button>
+                </div>
+             </div>
+        }
+
+        <!-- STEP 5: BOOKED -->
+        @case ('5-booked') {
+            <div class="max-w-xl mx-auto text-center animate-fade-in-up">
+                <div class="bg-green-500/20 p-6 rounded-full inline-block mb-6">
+                    <svg class="w-16 h-16 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold text-green-300 mb-4">Rezervácia Úspešná!</h1>
+                <p class="text-lg text-brand-light/80 mb-4">Ďakujeme, váš termín bol potvrdený. Tešíme sa na vašu návštevu.</p>
+                <p class="text-brand-light/70">Budete presmerovaný na stránku s vašimi termínmi...</p>
+            </div>
+        }
+    }
+
+</div>

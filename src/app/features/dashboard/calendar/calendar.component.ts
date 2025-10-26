@@ -1,3 +1,4 @@
+
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Appointment, SalonService, Stylist, UserProfile } from '../../../core/models';
@@ -17,8 +18,8 @@ export class CalendarComponent {
 
   stylists = this.salonDataService.stylists;
   services = this.salonDataService.services;
-  users = signal<UserProfile[]>([]);
-  allAppointments = signal<Appointment[]>([]);
+  users = this.salonDataService.users;
+  allAppointments = this.salonDataService.appointments;
   
   selectedDate = signal(new Date());
   
@@ -53,11 +54,6 @@ export class CalendarComponent {
       });
     return appointmentsMap;
   });
-
-  constructor() {
-    this.salonDataService.getAllAppointments().subscribe(data => this.allAppointments.set(data));
-    this.salonDataService.getUsers().subscribe(data => this.users.set(data));
-  }
   
   getAppointmentFor(stylistId: string, hour: number): Appointment | undefined {
     return this.appointmentsByStylistAndHour().get(`${stylistId}-${hour}`);
@@ -96,8 +92,7 @@ export class CalendarComponent {
   handleSaveAppointment(appointmentData: Omit<Appointment, 'id'>) {
     this.salonDataService.createAppointment(appointmentData).subscribe({
       next: () => {
-        // Refetch appointments
-        this.salonDataService.getAllAppointments().subscribe(data => this.allAppointments.set(data));
+        // The service signal will update automatically, no need to refetch
         this.closeModal();
       },
       error: (err) => console.error('Failed to create appointment', err)
