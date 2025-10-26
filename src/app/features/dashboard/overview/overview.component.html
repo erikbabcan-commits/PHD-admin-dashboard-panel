@@ -65,7 +65,17 @@
                 <td class="p-4">{{ details.serviceName }}</td>
                 <td class="p-4">{{ details.stylistName }}</td>
                 <td class="p-4 text-center">
-                  <button (click)="cancelAppointment(appt)" class="text-red-400 hover:underline">Zrušiť</button>
+                  <button 
+                    (click)="cancelAppointment(appt)" 
+                    [disabled]="isCancelling()"
+                    class="text-red-400 hover:underline disabled:text-gray-500 disabled:cursor-not-allowed flex items-center gap-1 justify-center">
+                    @if (isCancelling()) {
+                      <div class="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-red-400"></div>
+                      <span>Zrušujem...</span>
+                    } @else {
+                      <span>Zrušiť</span>
+                    }
+                  </button>
                 </td>
               </tr>
             }

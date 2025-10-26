@@ -77,8 +77,13 @@
         <button type="button" (click)="onClose()" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-500 transition-colors duration-300">
           Zrušiť
         </button>
-        <button type="submit" class="bg-gold text-brand-dark font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed" [disabled]="appointmentForm.invalid">
-          Uložiť Termín
+        <button type="submit" class="bg-gold text-brand-dark font-bold py-2 px-6 rounded-full hover:bg-yellow-300 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-2" [disabled]="appointmentForm.invalid || isSaving()">
+          @if (isSaving()) {
+            <div class="w-5 h-5 border-2 border-dashed rounded-full animate-spin border-brand-dark"></div>
+            <span>Ukladám...</span>
+          } @else {
+            <span>Uložiť Termín</span>
+          }
         </button>
       </footer>
     </form>

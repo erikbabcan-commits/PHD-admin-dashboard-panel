@@ -1,5 +1,3 @@
-
-
 import { Component, ChangeDetectionStrategy, input, output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,6 +15,7 @@ export class ClientModalComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   user = input<UserProfile | null>();
+  isSaving = input(false); // New input for saving state
 
   save = output<UserProfile>();
   close = output<void>();
@@ -61,7 +60,7 @@ export class ClientModalComponent implements OnInit {
         lastUpdated: new Date()
       };
       clientData = {
-        uid: `user-${Date.now()}`, // Temporary ID, will be overwritten by service if needed
+        uid: `user-${Date.now()}`, 
         name: formValue.name,
         email: formValue.email,
         phone: formValue.phone || undefined,
@@ -76,6 +75,7 @@ export class ClientModalComponent implements OnInit {
   }
 
   onClose() {
+    this.clientForm.reset(); // Reset form on close
     this.close.emit();
   }
 }

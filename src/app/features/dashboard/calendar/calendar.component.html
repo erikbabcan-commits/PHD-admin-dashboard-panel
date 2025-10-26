@@ -54,6 +54,7 @@
     [users]="users()"
     [services]="services()"
     [stylists]="stylists()"
+    [isSaving]="isSavingAppointment()"
     (save)="handleSaveAppointment($event)"
     (close)="closeModal()"
   ></app-appointment-modal>

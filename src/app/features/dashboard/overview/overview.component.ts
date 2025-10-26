@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, computed, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SalonDataService } from '../../../core/data';
 import { Appointment } from '../../../core/models';
 import { NotificationService } from '../../../core/services';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-overview',
@@ -21,6 +22,8 @@ export class OverviewComponent {
   private users = this.salonDataService.users;
   private stylists = this.salonDataService.stylists;
   private services = this.salonDataService.services;
+
+  isCancelling = signal(false); // New signal for cancellation state
 
   // Computed stats
   upcomingAppointmentsCount = computed(() => 
@@ -53,8 +56,17 @@ export class OverviewComponent {
 
   cancelAppointment(appointment: Appointment) {
     if (confirm(`Naozaj chcete zrušiť termín pre klienta ${this.getAppointmentDetails(appointment).userName}?`)) {
-      this.salonDataService.cancelAppointment(appointment.id);
-      this.notificationService.show('Termín bol úspešne zrušený.', 'success');
+      this.isCancelling.set(true);
+      this.salonDataService.cancelAppointment(appointment.id).pipe(
+        finalize(() => this.isCancelling.set(false))
+      ).subscribe({
+        next: () => {
+          this.notificationService.show('Termín bol úspešne zrušený.', 'success');
+        },
+        error: (err) => {
+          this.notificationService.show(err.message || 'Nepodarilo sa zrušiť termín.', 'error');
+        }
+      });
     }
   }
 }

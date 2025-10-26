@@ -1,9 +1,10 @@
-
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Appointment, SalonService, Stylist, UserProfile } from '../../../core/models';
 import { SalonDataService } from '../../../core/data';
 import { AppointmentModalComponent } from '../appointment-modal/appointment-modal.component';
+import { NotificationService } from '../../../core/services';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -15,6 +16,7 @@ import { AppointmentModalComponent } from '../appointment-modal/appointment-moda
 })
 export class CalendarComponent {
   private salonDataService = inject(SalonDataService);
+  private notificationService = inject(NotificationService);
 
   stylists = this.salonDataService.stylists;
   services = this.salonDataService.services;
@@ -25,6 +27,7 @@ export class CalendarComponent {
   
   isModalOpen = signal(false);
   modalInitialData = signal<{ date: Date; hour: number; stylistId: string } | null>(null);
+  isSavingAppointment = signal(false); // New signal for saving state
 
   hours = Array.from({ length: 12 }, (_, i) => 9 + i); // 9 AM to 8 PM
 
@@ -90,12 +93,17 @@ export class CalendarComponent {
   }
 
   handleSaveAppointment(appointmentData: Omit<Appointment, 'id'>) {
-    this.salonDataService.createAppointment(appointmentData).subscribe({
+    this.isSavingAppointment.set(true);
+    this.salonDataService.createAppointment(appointmentData).pipe(
+      finalize(() => this.isSavingAppointment.set(false))
+    ).subscribe({
       next: () => {
-        // The service signal will update automatically, no need to refetch
+        this.notificationService.show('Termín bol úspešne vytvorený.', 'success');
         this.closeModal();
       },
-      error: (err) => console.error('Failed to create appointment', err)
+      error: (err) => {
+        this.notificationService.show(err.message || 'Nepodarilo sa vytvoriť termín.', 'error');
+      }
     });
   }
 }

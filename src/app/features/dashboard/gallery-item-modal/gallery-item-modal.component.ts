@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, input, output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,6 +15,7 @@ export class GalleryItemModalComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   item = input<GalleryItem | null>();
+  isSaving = input(false); // New input for saving state
 
   save = output<GalleryItem>();
   close = output<void>();

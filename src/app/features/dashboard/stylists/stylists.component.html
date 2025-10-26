@@ -1,4 +1,3 @@
-
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-3xl font-bold text-gold">Správa Stylistov</h1>
   <button (click)="openModal()" class="bg-gold text-brand-dark font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all duration-300">
@@ -6,7 +5,9 @@
   </button>
 </div>
 
-@if (stylists().length > 0) {
+@if (isLoading()) {
+  <app-spinner message="Načítavam stylistov..."></app-spinner>
+} @else if (stylists().length > 0) {
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     @for(stylist of stylists(); track stylist.id) {
       <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-hidden flex flex-col">
@@ -16,7 +17,17 @@
           <p class="text-brand-light/70 mb-4">{{ stylist.title }}</p>
           <div class="mt-auto flex justify-end gap-2">
             <button (click)="openModal(stylist)" class="text-blue-400 hover:underline">Upraviť</button>
-            <button (click)="handleDelete(stylist)" class="text-red-400 hover:underline">Vymazať</button>
+            <button 
+              (click)="handleDelete(stylist)" 
+              [disabled]="isDeleting()"
+              class="text-red-400 hover:underline disabled:text-gray-500 disabled:cursor-not-allowed flex items-center gap-1">
+              @if (isDeleting()) {
+                <div class="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-red-400"></div>
+                <span>Mažem...</span>
+              } @else {
+                <span>Vymazať</span>
+              }
+            </button>
           </div>
         </div>
       </div>
@@ -32,6 +43,7 @@
   <app-stylist-modal
     [stylist]="editingStylist()"
     [allServices]="services()"
+    [isSaving]="isSaving()"
     (save)="handleSave($event)"
     (close)="closeModal()">
   </app-stylist-modal>

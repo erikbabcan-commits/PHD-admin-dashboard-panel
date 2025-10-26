@@ -1,4 +1,3 @@
-
 import { Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable, of, delay, map } from 'rxjs';
@@ -167,46 +166,82 @@ export class SalonDataService {
     return of(newAppointment).pipe(delay(100));
   }
   
-  cancelAppointment(appointmentId: string) {
+  cancelAppointment(appointmentId: string): Observable<void> {
     this._appointments.update(appts => appts.map(appt => 
       appt.id === appointmentId ? { ...appt, status: 'cancelled' } : appt
     ));
+    return of(undefined).pipe(delay(300));
   }
 
   // User CRUD
-  addUser(user: Omit<UserProfile, 'uid' | 'loyaltyPoints' | 'preferences' | 'privacyConsent' | 'isAdmin'>) { 
-    const newUser: UserProfile = {
-      ...user,
-      uid: `user-${Date.now()}`,
-      loyaltyPoints: 0,
-      preferences: {},
-      privacyConsent: { marketingEmails: false, appointmentReminders: true, lastUpdated: new Date() },
-      isAdmin: false
-    };
-    this._users.update(u => [...u, newUser]); 
+  addUser(user: UserProfile): Observable<void> { // Changed to accept full UserProfile
+    this._users.update(u => [...u, user]); 
+    return of(undefined).pipe(delay(300));
   }
-  updateUser(updatedUser: UserProfile) { this._users.update(u => u.map(user => user.uid === updatedUser.uid ? updatedUser : user)); }
-  deleteUser(uid: string) { this._users.update(u => u.filter(user => user.uid !== uid)); }
+  updateUser(updatedUser: UserProfile): Observable<void> { 
+    this._users.update(u => u.map(user => user.uid === updatedUser.uid ? updatedUser : user)); 
+    return of(undefined).pipe(delay(300));
+  }
+  deleteUser(uid: string): Observable<void> { 
+    this._users.update(u => u.filter(user => user.uid !== uid)); 
+    return of(undefined).pipe(delay(300));
+  }
 
   // Product CRUD
-  addProduct(product: Product) { this._products.update(p => [...p, { ...product, id: Date.now() }]); }
-  updateProduct(updatedProduct: Product) { this._products.update(p => p.map(product => product.id === updatedProduct.id ? updatedProduct : product)); }
-  deleteProduct(id: number) { this._products.update(p => p.filter(product => product.id !== id)); }
+  addProduct(product: Product): Observable<void> { 
+    this._products.update(p => [...p, { ...product, id: Date.now() }]); 
+    return of(undefined).pipe(delay(300));
+  }
+  updateProduct(updatedProduct: Product): Observable<void> { 
+    this._products.update(p => p.map(product => product.id === updatedProduct.id ? updatedProduct : product)); 
+    return of(undefined).pipe(delay(300));
+  }
+  deleteProduct(id: number): Observable<void> { 
+    this._products.update(p => p.filter(product => product.id !== id)); 
+    return of(undefined).pipe(delay(300));
+  }
 
   // Service CRUD
-  addService(service: SalonService) { this._services.update(s => [...s, { ...service, id: `service-${Date.now()}` }]); }
-  updateService(updatedService: SalonService) { this._services.update(s => s.map(service => service.id === updatedService.id ? updatedService : service)); }
-  deleteService(id: string) { this._services.update(s => s.filter(service => service.id !== id)); }
+  addService(service: SalonService): Observable<void> { 
+    this._services.update(s => [...s, { ...service, id: `service-${Date.now()}` }]); 
+    return of(undefined).pipe(delay(300));
+  }
+  updateService(updatedService: SalonService): Observable<void> { 
+    this._services.update(s => s.map(service => service.id === updatedService.id ? updatedService : service)); 
+    return of(undefined).pipe(delay(300));
+  }
+  deleteService(id: string): Observable<void> { 
+    this._services.update(s => s.filter(service => service.id !== id)); 
+    return of(undefined).pipe(delay(300));
+  }
   
   // Stylist CRUD
-  addStylist(stylist: Stylist) { this._stylists.update(s => [...s, { ...stylist, id: `stylist-${Date.now()}` }]); }
-  updateStylist(updatedStylist: Stylist) { this._stylists.update(s => s.map(stylist => stylist.id === updatedStylist.id ? updatedStylist : stylist)); }
-  deleteStylist(id: string) { this._stylists.update(s => s.filter(stylist => stylist.id !== id)); }
+  addStylist(stylist: Stylist): Observable<void> { 
+    this._stylists.update(s => [...s, { ...stylist, id: `stylist-${Date.now()}` }]); 
+    return of(undefined).pipe(delay(300));
+  }
+  updateStylist(updatedStylist: Stylist): Observable<void> { 
+    this._stylists.update(s => s.map(stylist => stylist.id === updatedStylist.id ? updatedStylist : stylist)); 
+    return of(undefined).pipe(delay(300));
+  }
+  deleteStylist(id: string): Observable<void> { 
+    this._stylists.update(s => s.filter(stylist => stylist.id !== id)); 
+    return of(undefined).pipe(delay(300));
+  }
 
   // GalleryItem CRUD
-  addGalleryItem(item: GalleryItem) { this._galleryItems.update(g => [...g, { ...item, id: Date.now() }]); }
-  updateGalleryItem(updatedItem: GalleryItem) { this._galleryItems.update(g => g.map(item => item.id === updatedItem.id ? updatedItem : item)); }
-  deleteGalleryItem(id: number) { this._galleryItems.update(g => g.filter(item => item.id !== id)); }
+  addGalleryItem(item: GalleryItem): Observable<void> { 
+    this._galleryItems.update(g => [...g, { ...item, id: Date.now() }]); 
+    return of(undefined).pipe(delay(300));
+  }
+  updateGalleryItem(updatedItem: GalleryItem): Observable<void> { 
+    this._galleryItems.update(g => g.map(item => item.id === updatedItem.id ? updatedItem : item)); 
+    return of(undefined).pipe(delay(300));
+  }
+  deleteGalleryItem(id: number): Observable<void> { 
+    this._galleryItems.update(g => g.filter(item => item.id !== id)); 
+    return of(undefined).pipe(delay(300));
+  }
 
   getUser(uid: string): UserProfile | undefined {
     return this._users().find(u => u.uid === uid);

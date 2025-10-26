@@ -15,6 +15,7 @@ export class ProductModalComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   product = input<Product | null>();
+  isSaving = input(false); // New input for saving state
 
   save = output<Product>();
   close = output<void>();

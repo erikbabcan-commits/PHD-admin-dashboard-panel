@@ -1,4 +1,3 @@
-
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-3xl font-bold text-gold">Správa Galérie</h1>
   <button (click)="openModal()" class="bg-gold text-brand-dark font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all duration-300">
@@ -6,15 +5,30 @@
   </button>
 </div>
 
-@if (galleryItems().length > 0) {
+@if (isLoading()) {
+  <app-spinner message="Načítavam galériu..."></app-spinner>
+} @else if (galleryItems().length > 0) {
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
     @for(item of galleryItems(); track item.id) {
       <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-hidden flex flex-col group">
         <div class="relative">
           <img [ngSrc]="item.imageUrl" [alt]="item.title" width="400" height="500" class="w-full aspect-[4/5] object-cover">
           <div class="absolute inset-0 bg-black/70 flex flex-col items-center justify-center p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 gap-2">
-            <button (click)="openModal(item)" class="text-white bg-blue-600 hover:bg-blue-500 py-2 px-4 rounded-full">Upraviť</button>
-            <button (click)="handleDelete(item)" class="text-white bg-red-600 hover:bg-red-500 py-2 px-4 rounded-full">Vymazať</button>
+            <button 
+              (click)="openModal(item)" 
+              [disabled]="isSaving() || isDeleting()"
+              class="text-white bg-blue-600 hover:bg-blue-500 py-2 px-4 rounded-full disabled:bg-gray-500 disabled:cursor-not-allowed">Upraviť</button>
+            <button 
+              (click)="handleDelete(item)" 
+              [disabled]="isSaving() || isDeleting()"
+              class="text-white bg-red-600 hover:bg-red-500 py-2 px-4 rounded-full disabled:bg-gray-500 disabled:cursor-not-allowed flex items-center gap-1">
+              @if (isDeleting()) {
+                <div class="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-white"></div>
+                <span>Mažem...</span>
+              } @else {
+                <span>Vymazať</span>
+              }
+            </button>
           </div>
         </div>
         <div class="p-4">
@@ -33,6 +47,7 @@
 @if(isModalOpen()) {
   <app-gallery-item-modal
     [item]="editingItem()"
+    [isSaving]="isSaving()"
     (save)="handleSave($event)"
     (close)="closeModal()">
   </app-gallery-item-modal>

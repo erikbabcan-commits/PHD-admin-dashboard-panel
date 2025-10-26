@@ -16,6 +16,7 @@ export class StylistModalComponent implements OnInit {
 
   stylist = input<Stylist | null>();
   allServices = input.required<SalonService[]>();
+  isSaving = input(false); // New input for saving state
 
   save = output<Stylist>();
   close = output<void>();

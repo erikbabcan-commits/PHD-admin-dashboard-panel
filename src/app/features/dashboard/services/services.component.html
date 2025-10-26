@@ -1,4 +1,3 @@
-
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-3xl font-bold text-gold">Správa Služieb</h1>
   <button (click)="openModal()" class="bg-gold text-brand-dark font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all duration-300">
@@ -6,7 +5,9 @@
   </button>
 </div>
 
-@if (services().length > 0) {
+@if (isLoading()) {
+  <app-spinner message="Načítavam služby..."></app-spinner>
+} @else if (services().length > 0) {
   <div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-x-auto">
     <table class="w-full text-left">
       <thead class="bg-black/30">
@@ -27,7 +28,17 @@
             <td class="p-4 text-right font-mono">{{ service.price | currency:'EUR':'symbol' }}</td>
             <td class="p-4 text-center">
               <button (click)="openModal(service)" class="text-blue-400 hover:underline mr-4">Upraviť</button>
-              <button (click)="handleDelete(service)" class="text-red-400 hover:underline">Vymazať</button>
+              <button 
+                (click)="handleDelete(service)" 
+                [disabled]="isDeleting()"
+                class="text-red-400 hover:underline disabled:text-gray-500 disabled:cursor-not-allowed flex items-center gap-1">
+                @if (isDeleting()) {
+                  <div class="w-4 h-4 border-2 border-dashed rounded-full animate-spin border-red-400"></div>
+                  <span>Mažem...</span>
+                } @else {
+                  <span>Vymazať</span>
+                }
+              </button>
             </td>
           </tr>
         }
@@ -43,6 +54,7 @@
 @if(isModalOpen()) {
   <app-service-modal 
     [service]="editingService()" 
+    [isSaving]="isSaving()"
     (save)="handleSave($event)" 
     (close)="closeModal()">
   </app-service-modal>

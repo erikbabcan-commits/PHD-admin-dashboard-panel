@@ -19,6 +19,7 @@ export class AppointmentModalComponent implements OnInit {
   users = input.required<UserProfile[]>();
   services = input.required<SalonService[]>();
   stylists = input.required<Stylist[]>();
+  isSaving = input(false); // New input for saving state
 
   // Outputs
   save = output<Omit<Appointment, 'id'>>();
