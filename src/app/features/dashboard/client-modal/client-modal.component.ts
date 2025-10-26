@@ -1,7 +1,9 @@
+
+
 import { Component, ChangeDetectionStrategy, input, output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { UserProfile } from '../../../core/models';
+import { PrivacyConsent, UserProfile } from '../../../core/models';
 
 @Component({
   selector: 'app-client-modal',
@@ -39,10 +41,36 @@ export class ClientModalComponent implements OnInit {
       this.clientForm.markAllAsTouched();
       return;
     }
-    // We only emit the fields from the form, the service will handle the rest
-    const clientData: any = {
-      ...this.clientForm.value
-    };
+
+    const formValue = this.clientForm.value;
+    let clientData: UserProfile;
+
+    if (this.isEditMode && this.user()) {
+      // Update existing user, merge form values with existing user data
+      clientData = {
+        ...this.user()!,
+        name: formValue.name,
+        email: formValue.email,
+        phone: formValue.phone || undefined, // Ensure phone is optional
+      };
+    } else {
+      // Create new user, providing default values for non-form fields
+      const defaultPrivacyConsent: PrivacyConsent = {
+        marketingEmails: false,
+        appointmentReminders: true,
+        lastUpdated: new Date()
+      };
+      clientData = {
+        uid: `user-${Date.now()}`, // Temporary ID, will be overwritten by service if needed
+        name: formValue.name,
+        email: formValue.email,
+        phone: formValue.phone || undefined,
+        loyaltyPoints: 0,
+        preferences: {},
+        privacyConsent: defaultPrivacyConsent,
+        isAdmin: false
+      };
+    }
     
     this.save.emit(clientData);
   }

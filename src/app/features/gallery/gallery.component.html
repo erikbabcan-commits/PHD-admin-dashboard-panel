@@ -26,7 +26,9 @@
     </div>
 
     <!-- Gallery Grid -->
-    @if (filteredItems().length > 0) {
+    @if (isLoading()) {
+        <app-spinner message="Načítavam galériu..."></app-spinner>
+    } @else if (filteredItems().length > 0) {
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @for(item of filteredItems(); track item.id; let i = $index) {
                 <div class="group relative overflow-hidden rounded-lg shadow-lg cursor-pointer animate-zoom-in"

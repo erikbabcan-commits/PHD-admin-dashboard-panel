@@ -16,6 +16,7 @@ import { GalleryComponent } from './features/gallery/gallery.component';
 import { StylistsComponent } from './features/stylists/stylists.component';
 import { ProductsComponent } from './features/products/products.component';
 import { ContactComponent } from './features/contact/contact.component';
+import { AboutComponent } from './features/about/about.component';
 
 export const APP_ROUTES: Routes = [
   { path: '', component: HomeComponent, title: 'PAPI Hair Design | Vitajte' },
@@ -25,6 +26,7 @@ export const APP_ROUTES: Routes = [
   { path: 'stylists', component: StylistsComponent, title: 'PAPI Hair Design | Naši Stylisti' },
   { path: 'products', component: ProductsComponent, title: 'PAPI Hair Design | Naše Produkty' },
   { path: 'contact', component: ContactComponent, title: 'PAPI Hair Design | Kontakt' },
+  { path: 'about', component: AboutComponent, title: 'PAPI Hair Design | O Nás' },
   {
     path: 'dashboard',
     component: DashboardComponent,

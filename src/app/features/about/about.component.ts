@@ -10,14 +10,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { of, delay, switchMap, startWith } from 'rxjs';
 
 @Component({
-  selector: 'app-contact',
+  selector: 'app-about',
   standalone: true,
   imports: [CommonModule, RouterLink, FooterComponent, ClientHeaderComponent, SpinnerComponent],
-  templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.css'],
+  templateUrl: './about.component.html',
+  styleUrls: ['./about.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContactComponent {
+export class AboutComponent {
   // Simulate loading for consistency
   isLoading = signal(true);
   private _dataLoaded$ = of(true).pipe(

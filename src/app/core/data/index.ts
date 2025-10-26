@@ -2,7 +2,7 @@
 import { Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable, of, delay, map } from 'rxjs';
-import { Product, Appointment, UserProfile, Stylist, SalonService, GalleryItem } from '../models';
+import { Product, Appointment, UserProfile, Stylist, SalonService, GalleryItem, PrivacyConsent } from '../models';
 
 // MOCK DATA
 
@@ -10,13 +10,16 @@ const MOCK_USERS: UserProfile[] = [
   { uid: 'user-1', name: 'Jana Nováková', email: 'jana@example.com', phone: '0901 123 456', loyaltyPoints: 120, preferences: {}, privacyConsent: { marketingEmails: true, appointmentReminders: true, lastUpdated: new Date() }, isAdmin: false },
   { uid: 'user-2', name: 'Peter Čierny', email: 'peter@example.com', phone: '0902 987 654', loyaltyPoints: 45, preferences: { preferredStylist: 'stylist-2' }, privacyConsent: { marketingEmails: false, appointmentReminders: true, lastUpdated: new Date() }, isAdmin: false },
   { uid: 'user-3', name: 'Eva Biela', email: 'eva@example.com', phone: '0915 555 888', loyaltyPoints: 350, preferences: {}, privacyConsent: { marketingEmails: true, appointmentReminders: true, lastUpdated: new Date() }, isAdmin: false },
+  { uid: 'user-4', name: 'Marek Hnedý', email: 'marek@example.com', phone: '0903 111 222', loyaltyPoints: 80, preferences: { preferredStylist: 'stylist-1' }, privacyConsent: { marketingEmails: true, appointmentReminders: false, lastUpdated: new Date() }, isAdmin: false },
+  { uid: 'user-5', name: 'Zuzana Zelená', email: 'zuzana@example.com', phone: '0904 333 444', loyaltyPoints: 210, preferences: {}, privacyConsent: { marketingEmails: false, appointmentReminders: true, lastUpdated: new Date() }, isAdmin: false },
 ];
 
 const MOCK_STYLISTS: Stylist[] = [
-  { id: 'stylist-1', name: 'Veronika', title: 'Top Stylist', imageUrl: 'https://picsum.photos/seed/stylist1/400/400', description: 'Expertka na farbenie a moderné strihy s viac ako 10-ročnou praxou.', services: ['service-1', 'service-3', 'service-4', 'service-5'], skills: ['Balayage', 'Ombré', 'Bob Cut', 'Svadobné účesy'] },
-  { id: 'stylist-2', name: 'Martin', title: 'Creative Director', imageUrl: 'https://picsum.photos/seed/stylist2/400/400', description: 'Špecialista na pánske strihy, úpravu brady a vlasovú starostlivosť.', services: ['service-2', 'service-6'], skills: ['Fade', 'Skin Fade', 'Úprava brady', 'Pánsky styling'] },
-  { id: 'stylist-3', name: 'Lucia', title: 'Junior Stylist', imageUrl: 'https://picsum.photos/seed/stylist3/400/400', description: 'Mladý talent s vášňou pre kreatívne a odvážne účesy. Sleduje najnovšie trendy.', services: ['service-1', 'service-2', 'service-5'], skills: ['Kreatívne farbenie', 'Strihy s textúrou', 'Styling na akcie'] },
-  { id: 'stylist-4', name: 'Tomáš', title: 'Barber & Stylist', imageUrl: 'https://picsum.photos/seed/stylist4/400/400', description: 'Precízny barber, ktorý ovláda klasické aj moderné techniky pánskych strihov.', services: ['service-2', 'service-6'], skills: ['Klasické holenie', 'Hot Towel Shave', 'Fade', 'Pánske strihy'] },
+  { id: 'stylist-1', name: 'Papi', title: 'Majiteľ & Master Stylist', imageUrl: 'https://picsum.photos/seed/papi/400/400', description: 'Zakladateľ salónu s viac ako 15 rokmi skúseností v oblasti vlasového dizajnu. Špecializuje sa na prémiové služby a kreatívne transformácie.', services: ['service-1', 'service-2', 'service-3', 'service-4', 'service-5', 'service-6'], skills: ['Premium strihanie', 'Styling', 'Farba', 'Kreatívne účesy'] },
+  { id: 'stylist-2', name: 'Maťo', title: 'Professional Barber', imageUrl: 'https://picsum.photos/seed/mato/400/400', description: 'Špecialista na pánske strihy a úpravu brady s moderným prístupom. Majster klasických aj moderných techník strihania.', services: ['service-2', 'service-6'], skills: ['Pánske strihanie', 'Brada & fúzy', 'Klasické strihy', 'Fade techniques'] },
+  { id: 'stylist-3', name: 'Miška', title: 'Creative Hair Artist', imageUrl: 'https://picsum.photos/seed/miska/400/400', description: 'Kreativita a moderné techniky sú jej silnou stránkou. Expertka na farebné transformácie a najnovšie trendy v kaderníctve.', services: ['service-1', 'service-3', 'service-4', 'service-5'], skills: ['Kreatívne farbenie', 'Moderné strihy', 'Highlights', 'Balayage'] },
+  { id: 'stylist-4', name: 'Dominik', title: 'Junior Stylist', imageUrl: 'https://picsum.photos/seed/dominik/400/400', description: 'Mladý a ambiciózny stylista s citom pre detail. Špecializuje sa na krátke dámske strihy a pánske úpravy.', services: ['service-1', 'service-2'], skills: ['Krátke strihy', 'Pánske úpravy', 'Trendy'] },
+  { id: 'stylist-5', name: 'Lenka', title: 'Colour Expert', imageUrl: 'https://picsum.photos/seed/lenka/400/400', description: 'Majsterka v obore farbenia vlasov. Od klasiky po extravagantné farby, vždy s dôrazom na zdravie vlasov.', services: ['service-3', 'service-4'], skills: ['Blond odtiene', 'Pastelové farby', 'Oprava farieb', 'Olaplex'] },
 ];
 
 const MOCK_SERVICES: SalonService[] = [
@@ -26,12 +29,17 @@ const MOCK_SERVICES: SalonService[] = [
   { id: 'service-4', name: 'Keratínová kúra', duration: 90, price: 80, category: 'Ostatné' },
   { id: 'service-5', name: 'Spoločenský účes', duration: 75, price: 65, category: 'Ostatné' },
   { id: 'service-6', name: 'Úprava brady a holenie', duration: 45, price: 35, category: 'Pánske' },
+  { id: 'service-7', name: 'Detský strih', duration: 30, price: 20, category: 'Ostatné' },
+  { id: 'service-8', name: 'Melír', duration: 120, price: 100, category: 'Farbenie' },
 ];
 
 const MOCK_APPOINTMENTS: Appointment[] = [
   { id: 'appt-1', userId: 'user-1', stylistId: 'stylist-1', serviceId: 'service-1', startTime: new Date(new Date().setHours(10, 0, 0, 0)), endTime: new Date(new Date().setHours(11, 0, 0, 0)), status: 'upcoming' },
   { id: 'appt-2', userId: 'user-2', stylistId: 'stylist-2', serviceId: 'service-2', startTime: new Date(new Date().setHours(14, 0, 0, 0)), endTime: new Date(new Date().setHours(14, 30, 0, 0)), status: 'upcoming' },
   { id: 'appt-3', userId: 'user-3', stylistId: 'stylist-3', serviceId: 'service-5', startTime: new Date(new Date().setHours(16, 0, 0, 0)), endTime: new Date(new Date().setHours(17, 15, 0, 0)), status: 'upcoming' },
+  { id: 'appt-4', userId: 'user-1', stylistId: 'stylist-1', serviceId: 'service-3', startTime: new Date(new Date().setDate(new Date().getDate() - 5)), endTime: new Date(new Date().setDate(new Date().getDate() - 5) + 180*60*1000), status: 'completed' },
+  { id: 'appt-5', userId: 'user-2', stylistId: 'stylist-2', serviceId: 'service-6', startTime: new Date(new Date().setDate(new Date().getDate() - 10)), endTime: new Date(new Date().setDate(new Date().getDate() - 10) + 45*60*1000), status: 'completed' },
+  { id: 'appt-6', userId: 'user-4', stylistId: 'stylist-1', serviceId: 'service-2', startTime: new Date(new Date().setHours(11, 30, 0, 0)), endTime: new Date(new Date().setHours(12, 0, 0, 0)), status: 'upcoming' },
 ];
 
 const MOCK_PRODUCTS: Product[] = [
@@ -41,6 +49,9 @@ const MOCK_PRODUCTS: Product[] = [
   { id: 4, name: 'Matte Clay Wax', price: 22.00, imageUrl: 'https://picsum.photos/seed/wax/400/400', description: 'Matný finiš so strednou fixáciou pre prirodzený a moderný styling.' },
   { id: 5, name: 'Hydrating Hair Mask', price: 35.00, imageUrl: 'https://picsum.photos/seed/mask/400/400', description: 'Hĺbkovo hydratačná maska pre suché a poškodené vlasy. Obnovuje vitalitu.' },
   { id: 6, name: 'Thermal Protection Spray', price: 21.50, imageUrl: 'https://picsum.photos/seed/thermal/400/400', description: 'Chráni vlasy pred poškodením teplom pri fénovaní, žehlení alebo kulmovaní.' },
+  { id: 7, name: 'Volume Boost Shampoo', price: 18.00, imageUrl: 'https://picsum.photos/seed/shampoo/400/400', description: 'Šampón pre objem, ktorý dodá vlasom plnosť a vzdušnosť bez zaťaženia.' },
+  { id: 8, name: 'Hair Elixir Serum', price: 42.00, imageUrl: 'https://picsum.photos/seed/serum/400/400', description: 'Luxusné vlasové sérum pre lesk, hebkosť a ochranu pred krepovatením.' },
+  { id: 9, name: 'Texturizing Powder', price: 16.50, imageUrl: 'https://picsum.photos/seed/powder/400/400', description: 'Ľahký prášok pre okamžitú textúru a objem s matným finišom.' },
 ];
 
 const MOCK_GALLERY_ITEMS: GalleryItem[] = [
@@ -56,6 +67,9 @@ const MOCK_GALLERY_ITEMS: GalleryItem[] = [
   { id: 10, title: 'Medený melír', category: 'Farbenie', imageUrl: 'https://picsum.photos/seed/highlights/400/500' },
   { id: 11, title: 'Pixie Cut', category: 'Dámske strihy', imageUrl: 'https://picsum.photos/seed/pixie/400/500' },
   { id: 12, title: 'Vlny na slávnosť', category: 'Spoločenské účesy', imageUrl: 'https://picsum.photos/seed/waves/400/500' },
+  { id: 13, title: 'Pánsky undercut', category: 'Pánske strihy', imageUrl: 'https://picsum.photos/seed/undercut/400/500' },
+  { id: 14, title: 'Extravagantné farbenie', category: 'Farbenie', imageUrl: 'https://picsum.photos/seed/extravagant/400/500' },
+  { id: 15, title: 'Dlhé vrstvené vlasy', category: 'Dámske strihy', imageUrl: 'https://picsum.photos/seed/longlayers/400/500' },
 ];
 
 
@@ -87,6 +101,7 @@ export class SalonDataService {
   
   getUserAppointments(userId: string): Observable<Appointment[]> {
     return toObservable(this._appointments).pipe(
+      delay(300), // Simulate API call
       map(appts => appts
         .filter(a => a.userId === userId)
         .sort((a, b) => b.startTime.getTime() - a.startTime.getTime())

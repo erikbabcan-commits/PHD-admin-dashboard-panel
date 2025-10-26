@@ -1,15 +1,19 @@
 
+
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SalonDataService } from '../../core/data';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ClientHeaderComponent } from '../../shared/components/client-header/client-header.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { switchMap, of, delay, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, RouterLink, RouterLinkActive, FooterComponent, ClientHeaderComponent],
+  imports: [CommonModule, NgOptimizedImage, RouterLink, RouterLinkActive, FooterComponent, ClientHeaderComponent, SpinnerComponent],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,7 +21,17 @@ import { ClientHeaderComponent } from '../../shared/components/client-header/cli
 export class GalleryComponent {
   private salonDataService = inject(SalonDataService);
 
-  galleryItems = this.salonDataService.galleryItems;
+  // Use a reactive approach for loading data and showing spinner
+  isLoading = signal(true);
+  private _galleryItems$ = of(this.salonDataService.galleryItems()).pipe(
+    delay(400), // Simulate network latency
+    switchMap(items => {
+      this.isLoading.set(false);
+      return of(items);
+    }),
+    startWith([]) // Initial empty array for signal before data arrives
+  );
+  galleryItems = toSignal(this._galleryItems$, { initialValue: [] });
   
   selectedCategory = signal('Všetky');
 

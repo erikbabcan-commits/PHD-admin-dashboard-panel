@@ -9,24 +9,35 @@
         <p class="text-lg text-brand-light/70 max-w-2xl mx-auto">Zoznámte sa s profesionálmi, ktorí stoja za úspechom PAPI Hair Design.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
-        @for (stylist of stylists(); track stylist.id; let i = $index) {
-            <div class="bg-brand-dark/50 rounded-lg shadow-xl overflow-hidden flex flex-col sm:flex-row items-center gap-8 p-8 border border-gold/10 animate-zoom-in"
-                 [style.animation-delay]="i * 100 + 'ms'">
-                <img [ngSrc]="stylist.imageUrl" [alt]="stylist.name" width="160" height="160"
-                     class="w-40 h-40 rounded-full object-cover border-4 border-gold flex-shrink-0">
-                <div class="text-center sm:text-left">
-                    <h2 class="text-3xl font-bold text-white">{{ stylist.name }}</h2>
-                    <p class="text-xl text-gold font-semibold mb-3">{{ stylist.title }}</p>
-                    <p class="text-brand-light/80 mb-4">{{ stylist.description }}</p>
-                    <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
-                        @for (skill of stylist.skills; track skill) {
-                            <span class="text-xs bg-gray-700 text-gray-300 px-3 py-1 rounded-full font-semibold">{{ skill }}</span>
-                        }
+    @if (isLoading()) {
+        <app-spinner message="Načítavam stylistov..."></app-spinner>
+    } @else if (stylists().length > 0) {
+        <!-- Stylists Team Section -->
+        <section>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                @for (stylist of stylists(); track stylist.id; let i = $index) {
+                    <div class="bg-brand-dark/50 rounded-lg shadow-xl overflow-hidden flex flex-col sm:flex-row items-center gap-8 p-8 border border-gold/10 animate-zoom-in"
+                        [style.animation-delay]="i * 100 + 'ms'">
+                        <img [ngSrc]="stylist.imageUrl" [alt]="stylist.name" width="160" height="160"
+                            class="w-40 h-40 rounded-full object-cover border-4 border-gold flex-shrink-0">
+                        <div class="text-center sm:text-left">
+                            <h3 class="text-3xl font-bold text-white">{{ stylist.name }}</h3>
+                            <p class="text-xl text-gold font-semibold mb-3">{{ stylist.title }}</p>
+                            <p class="text-brand-light/80 mb-4">{{ stylist.description }}</p>
+                            <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                @for (skill of stylist.skills; track skill) {
+                                    <span class="text-xs bg-gray-700 text-gray-300 px-3 py-1 rounded-full font-semibold">{{ skill }}</span>
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
-        }
-    </div>
+        </section>
+    } @else {
+        <div class="text-center py-20 px-6 bg-brand-dark/30 rounded-lg">
+            <p class="text-xl text-brand-light/70">Nenašli sa žiadni stylisti.</p>
+        </div>
+    }
 </div>
 <app-footer></app-footer>

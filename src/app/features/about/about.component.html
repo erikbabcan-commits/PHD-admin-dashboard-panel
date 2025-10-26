@@ -1,0 +1,34 @@
+
+
+<!-- Header -->
+<app-client-header></app-client-header>
+
+<div class="container mx-auto p-4 md:p-8 animate-fade-in-up min-h-[calc(100vh-250px)]">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-gold mb-2">O Nás - PAPI Hair Design</h1>
+        <p class="text-lg text-brand-light/70 max-w-2xl mx-auto">Viac než len kaderníctvo, je to miesto, kde sa spája vášeň, umenie a komunita.</p>
+    </div>
+
+    @if (isLoading()) {
+        <app-spinner message="Načítavam informácie o salóne..."></app-spinner>
+    } @else {
+        <div class="bg-brand-dark/50 p-8 rounded-lg shadow-xl border border-gold/10 max-w-4xl mx-auto text-left animate-zoom-in">
+            <h2 class="text-3xl font-bold text-white mb-4">Naša Filozofia</h2>
+            <p class="text-brand-light/80 leading-relaxed mb-4">
+                PAPI HAIR DESIGN je miesto, kde veríme, že každý vlas rozpráva svoj príbeh. Odvážne sme sa pustili do cesty, aby sme priniesli svetovú kvalitu a inovatívne prístupy do srdca Košíc. Naša filozofia je postavená na presvedčení, že krása by mala byť udržateľná a úprimná.
+            </p>
+            <h3 class="text-xl font-semibold text-gold mb-3">Kľúčové body našej práce:</h3>
+            <ul class="list-disc list-inside text-brand-light/80 space-y-2 mb-8">
+                <li><strong class="text-white">Značka:</strong> S hrdosťou používame a odporúčame vegánsku značku Gold Hair Care Professional, ktorá stelesňuje naše hodnoty.</li>
+                <li><strong class="text-white">Hodnoty:</strong> Kvalita, udržateľnosť a úprimný prístup k vlasom, pokožke aj životnému prostrediu.</li>
+                <li><strong class="text-white">Služby:</strong> Ponúkame široké spektrum služieb, ktoré pokrývajú všetky vaše vlasové potreby – od precízneho strihania, rôznych techník farbenia (highlights, balayage), cez hĺbkové ošetrenia, až po kreatívne premeny.</li>
+                <li><strong class="text-white">Cieľ:</strong> Naším poslaním je, aby ste od nás odchádzali nielen s krásnym účesom, ale aj s pocitom sebadôvery a vedomím, že vaše vlasy dostali tú najlepšiu starostlivosť.</li>
+            </ul>
+
+            <p class="text-brand-light/80 leading-relaxed">
+                Pridajte sa k nám a objavte, prečo je PAPI HAIR DESIGN viac než len kaderníctvo. Objavte miesto, kde sa vaša krása stáva umením.
+            </p>
+        </div>
+    }
+</div>
+<app-footer></app-footer>
