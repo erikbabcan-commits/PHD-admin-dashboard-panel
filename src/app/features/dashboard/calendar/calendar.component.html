@@ -1,0 +1,60 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold text-gold">Kalendár Termínov</h1>
+  <div class="flex items-center gap-2">
+      <button (click)="changeDate(-1)" class="p-2 rounded-full hover:bg-gold/10 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+      </button>
+      <button (click)="goToToday()" class="px-4 py-2 rounded-full bg-brand-dark/50 hover:bg-gold/10 transition-colors font-semibold">
+          {{ selectedDate() | date:'d. MMMM yyyy' }}
+      </button>
+      <button (click)="changeDate(1)" class="p-2 rounded-full hover:bg-gold/10 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+      </button>
+  </div>
+</div>
+
+<div class="bg-brand-dark/50 rounded-lg shadow-lg overflow-x-auto">
+  <div class="min-w-[800px]">
+    <!-- Header Row -->
+    <div class="grid h-16 border-b border-gold/20 sticky top-0 bg-brand-dark/80 backdrop-blur-sm z-10" [style.grid-template-columns]="'80px repeat(' + stylists().length + ', 1fr)'">
+      <div class="flex items-center justify-center font-semibold text-gold border-r border-gold/20">Čas</div>
+      @for(stylist of stylists(); track stylist.id) {
+        <div class="flex items-center justify-center p-2 text-center font-semibold border-r border-gold/20">{{ stylist.name }}</div>
+      }
+    </div>
+
+    <!-- Time Rows -->
+    @for(hour of hours; track hour) {
+      <div class="grid min-h-[80px] border-b border-gold/20" [style.grid-template-columns]="'80px repeat(' + stylists().length + ', 1fr)'">
+        <div class="flex items-center justify-center font-mono border-r border-gold/20 text-brand-light/70">{{ hour }}:00</div>
+        @for(stylist of stylists(); track stylist.id) {
+          <div class="border-r border-gold/20 p-1 relative group hover:bg-gold/5 transition-colors">
+            @if (getAppointmentFor(stylist.id, hour); as appt) {
+              @if (appt.startTime.getHours() === hour) {
+                <div class="bg-gold/20 text-white rounded-md p-2 h-full text-xs flex flex-col justify-center">
+                  <p class="font-bold">{{ getServiceName(appt.serviceId) }}</p>
+                  <p class="text-brand-light/80">{{ getUserName(appt.userId) }}</p>
+                </div>
+              }
+            } @else {
+               <button (click)="openAddModal(hour, stylist.id)" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                 <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+               </button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if(isModalOpen()) {
+  <app-appointment-modal
+    [initialData]="modalInitialData()"
+    [users]="users()"
+    [services]="services()"
+    [stylists]="stylists()"
+    (save)="handleSaveAppointment($event)"
+    (close)="closeModal()"
+  ></app-appointment-modal>
+}

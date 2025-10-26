@@ -1,0 +1,79 @@
+<div class="max-w-4xl mx-auto">
+  <div class="text-center mb-8">
+    <h1 class="text-4xl font-bold text-gold mb-2">AI Generátor Nápadov na Obsah</h1>
+    <p class="text-lg text-brand-light/70">Získajte kreatívne nápady pre sociálne siete v priebehu sekúnd.</p>
+  </div>
+
+  <!-- Input Form -->
+  <form (submit)="generateIdeas()" class="flex flex-col sm:flex-row gap-4 mb-10 p-4 bg-brand-dark/50 rounded-lg shadow-lg">
+    <input 
+      type="text" 
+      [ngModel]="topic()"
+      (ngModelChange)="topic.set($event)"
+      name="topic"
+      placeholder="Zadajte tému, napr. 'letné účesy'..."
+      class="flex-grow bg-brand-dark/80 border border-gray-600 rounded-full p-4 text-white focus:ring-2 focus:ring-gold focus:border-gold transition-all"
+      [disabled]="isLoading()">
+    <button 
+      type="submit" 
+      class="bg-gold text-brand-dark font-bold py-4 px-8 rounded-full hover:bg-yellow-300 transition-colors duration-300 disabled:bg-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      [disabled]="isLoading() || !topic()">
+      @if (isLoading()) {
+        <div class="w-5 h-5 border-2 border-dashed rounded-full animate-spin border-brand-dark"></div>
+        <span>Generujem...</span>
+      } @else {
+         <span>Generovať Nápady</span>
+      }
+    </button>
+  </form>
+
+  <!-- Results -->
+  <div class="space-y-6">
+    @if (isLoading()) {
+      <app-spinner message="AI premýšľa..."></app-spinner>
+    }
+    
+    @if (error()) {
+      <div class="bg-red-900/50 border border-red-500 text-red-300 p-4 rounded-lg">
+        <h3 class="font-bold">Chyba!</h3>
+        <p>{{ error() }}</p>
+      </div>
+    }
+
+    @for (idea of ideas(); track $index) {
+      <div class="bg-brand-dark/50 border border-gold/10 rounded-lg shadow-lg p-6 animate-fade-in-up">
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full"
+              [class.bg-pink-500/20]="idea.platform === 'Instagram'"
+              [class.text-pink-300]="idea.platform === 'Instagram'"
+              [class.bg-cyan-500/20]="idea.platform === 'TikTok'"
+              [class.text-cyan-300]="idea.platform === 'TikTok'"
+              [class.bg-blue-500/20]="idea.platform === 'Facebook'"
+              [class.text-blue-300]="idea.platform === 'Facebook'">
+              {{ idea.platform }}
+            </span>
+            <h2 class="text-2xl font-bold text-gold mt-2">{{ idea.title }}</h2>
+          </div>
+          <button (click)="copyToClipboard(idea, $index)" class="flex items-center gap-2 text-sm bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-3 rounded-full transition-colors">
+             @if (copiedIndex() === $index) {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                <span>Skopírované</span>
+             } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                <span>Kopírovať</span>
+             }
+          </button>
+        </div>
+        
+        <p class="text-brand-light/80 mb-4">{{ idea.description }}</p>
+        
+        <div class="flex flex-wrap gap-2">
+          @for (tag of idea.hashtags; track tag) {
+            <span class="text-sm bg-gray-700 text-gray-300 px-2 py-1 rounded">{{ tag }}</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

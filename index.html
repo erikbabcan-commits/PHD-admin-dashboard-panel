@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PAPI Hair Design</title>
+  <script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.3.7?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.3.7?external=rxjs",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.3.7?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^20.3.7/http?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.3.7?external=rxjs",
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.3.7?external=rxjs",
+    "@google/genai": "https://next.esm.sh/@google/genai@^1.27.0?external=rxjs",
+    "@angular/router": "https://next.esm.sh/@angular/router@^20.3.7?external=rxjs",
+    "@angular/service-worker": "https://next.esm.sh/@angular/service-worker@^20.3.7?external=rxjs"
+  }
+}
+</script>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#1a1a1a" />
+  
+  <!-- iOS PWA Support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'gold': '#D4AF37',
+            'gold-light': '#FFD700', /* Brighter gold for gradients */
+            'gold-dark': '#B8860B',  /* Darker gold for gradients */
+            'brand-dark': '#1a1a1a',
+            'brand-light': '#f0f0f0',
+          },
+          backdropFilter: { // For liquid-glass effect
+            'none': 'none',
+            'blur': 'blur(10px)',
+          }
+        }
+      },
+      plugins: [
+        function({ addUtilities, theme }) {
+          const newUtilities = {
+            '.backdrop-blur-lg': {
+              backdropFilter: 'blur(10px)', // Custom blur value
+            },
+          }
+          addUtilities(newUtilities, ['responsive', 'hover']);
+        }
+      ]
+    }
+  </script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

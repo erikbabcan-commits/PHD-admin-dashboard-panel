@@ -1,0 +1,67 @@
+
+<div class="flex h-screen bg-brand-dark">
+  <!-- Sidebar -->
+  <aside 
+    class="bg-black/20 text-brand-light transition-all duration-300 ease-in-out flex flex-col"
+    [class.w-64]="isSidebarOpen()" 
+    [class.w-20]="!isSidebarOpen()">
+    
+    <!-- Logo -->
+    <div class="flex items-center justify-center h-20 border-b border-gold/10">
+      <h1 class="text-2xl font-bold text-gold transition-opacity duration-300" [class.opacity-100]="isSidebarOpen()" [class.opacity-0]="!isSidebarOpen()">
+        PAPI
+      </h1>
+       <h1 class="text-2xl font-bold text-gold transition-opacity duration-300 absolute" [class.opacity-0]="isSidebarOpen()" [class.opacity-100]="!isSidebarOpen()">
+        P
+      </h1>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow pt-5">
+      <ul>
+        @for (item of navItems; track item.path) {
+          <li>
+            <a 
+              [routerLink]="item.path" 
+              routerLinkActive="bg-gold/10 text-gold"
+              [routerLinkActiveOptions]="{exact: true}"
+              class="flex items-center h-12 text-gray-300 hover:bg-gold/5 hover:text-white transition-colors duration-200"
+              [class.px-6]="isSidebarOpen()"
+              [class.justify-center]="!isSidebarOpen()">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="item.icon" />
+              </svg>
+              <span class="ml-4 transition-opacity" [class.opacity-100]="isSidebarOpen()" [class.opacity-0]="!isSidebarOpen()">{{ item.label }}</span>
+              @if(item.isNew) {
+                <span class="ml-auto bg-gold text-brand-dark text-xs font-bold px-2 py-0.5 rounded-full transition-opacity" [class.opacity-100]="isSidebarOpen()" [class.opacity-0]="!isSidebarOpen()">NOVÉ</span>
+              }
+            </a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <header class="flex items-center justify-between h-20 px-6 bg-brand-dark/80 border-b border-gold/10">
+        <button (click)="toggleSidebar()" class="text-gray-300 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h2 class="text-xl font-semibold text-white">Admin Panel</h2>
+        <div>
+          <!-- User Profile Placeholder -->
+          <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center font-bold text-brand-dark">
+            A
+          </div>
+        </div>
+    </header>
+    <!-- Content Area -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-brand-dark p-6 md:p-8">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

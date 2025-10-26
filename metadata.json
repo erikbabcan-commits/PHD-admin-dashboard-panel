@@ -1,0 +1,5 @@
+{
+  "name": "Salon AI Content Generator",
+  "description": "An AI-powered tool to generate social media content ideas for a hair salon. Enter a topic, and Gemini will provide creative post ideas including titles, descriptions, target platforms, and relevant hashtags.",
+  "requestFramePermissions": []
+}
