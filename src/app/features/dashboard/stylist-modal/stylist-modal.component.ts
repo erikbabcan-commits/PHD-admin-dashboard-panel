@@ -1,4 +1,3 @@
-
 import { Component, ChangeDetectionStrategy, input, output, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray, FormControl } from '@angular/forms';
@@ -29,6 +28,10 @@ export class StylistModalComponent implements OnInit {
     return this.stylistForm.get('serviceChecks') as FormArray;
   }
 
+  get skillsControls() {
+    return this.stylistForm.get('skills') as FormArray<FormControl<string>>;
+  }
+
   ngOnInit() {
     const s = this.stylist();
     this.isEditMode = !!s;
@@ -40,13 +43,18 @@ export class StylistModalComponent implements OnInit {
       new FormControl(initialServiceIds.includes(service.id))
     );
 
+    // Create FormArray of strings for skills
+    const skillsFormArray = this.fb.array(
+      (s?.skills || []).map(skill => this.fb.control(skill, Validators.required))
+    );
+
     this.stylistForm = this.fb.group({
       name: [s?.name || '', Validators.required],
       title: [s?.title || '', Validators.required],
       description: [s?.description || '', Validators.required],
       imageUrl: [s?.imageUrl || '', Validators.required],
-      skills: [s?.skills.join(', ') || ''],
-      serviceChecks: this.fb.array(serviceChecks) // Separate FormArray for checks
+      skills: skillsFormArray, // Use FormArray for skills
+      serviceChecks: this.fb.array(serviceChecks)
     });
   }
 
@@ -69,8 +77,8 @@ export class StylistModalComponent implements OnInit {
       title: formValue.title,
       description: formValue.description,
       imageUrl: formValue.imageUrl,
-      skills: formValue.skills.split(',').map((skill: string) => skill.trim()).filter((skill: string) => skill),
-      services: selectedServiceIds, // Use the calculated array
+      skills: formValue.skills, // Skills are now directly from FormArray
+      services: selectedServiceIds,
     };
     
     this.save.emit(stylistData);
@@ -78,5 +86,20 @@ export class StylistModalComponent implements OnInit {
 
   onClose() {
     this.close.emit();
+  }
+
+  addSkill(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.trim();
+
+    if (value && this.skillsControls.controls.every(control => control.value !== value)) {
+      this.skillsControls.push(this.fb.control(value, Validators.required));
+      input.value = ''; // Clear the input after adding
+    }
+    event.preventDefault(); // Prevent form submission
+  }
+
+  removeSkill(index: number) {
+    this.skillsControls.removeAt(index);
   }
 }

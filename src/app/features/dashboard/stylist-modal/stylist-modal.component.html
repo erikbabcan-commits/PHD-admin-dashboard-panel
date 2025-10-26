@@ -1,4 +1,3 @@
-
 <div class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center animate-fade-in p-4" (click)="onClose()">
   <div class="bg-brand-dark border border-gold/20 rounded-lg shadow-xl w-full max-w-2xl relative animate-zoom-in text-left flex flex-col" (click)="$event.stopPropagation()">
     <header class="p-6 border-b border-gold/20 flex justify-between items-center">
@@ -37,10 +36,28 @@
           <p class="text-red-400 text-sm mt-1">URL fotografie je povinná.</p>
         }
       </div>
+      
+      <!-- Skills Tag Input -->
       <div>
-        <label for="skills" class="block text-sm font-medium text-brand-light/80 mb-2">Špecializácie (oddelené čiarkou)</label>
-        <input type="text" id="skills" formControlName="skills" class="w-full bg-brand-dark/80 border border-gray-600 rounded-md p-3 text-white focus:ring-gold focus:border-gold">
+        <label for="skillsInput" class="block text-sm font-medium text-brand-light/80 mb-2">Špecializácie</label>
+        <div class="flex flex-wrap gap-2 p-3 bg-brand-dark/80 border border-gray-600 rounded-md">
+          @for(skillControl of skillsControls.controls; track $index) {
+            <span class="skill-tag">
+              {{ skillControl.value }}
+              <button type="button" (click)="removeSkill($index)" class="skill-tag-remove">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </span>
+          }
+          <input 
+            type="text" 
+            id="skillsInput" 
+            (keyup.enter)="addSkill($event)" 
+            placeholder="Pridajte špecializáciu a stlačte Enter"
+            class="flex-grow bg-transparent outline-none border-none p-0 m-0 text-white placeholder-gray-500 min-w-[150px]">
+        </div>
       </div>
+
       <div>
         <label class="block text-sm font-medium text-brand-light/80 mb-2">Poskytované Služby</label>
         <div formArrayName="serviceChecks" class="grid grid-cols-2 gap-2 p-3 bg-brand-dark/80 border border-gray-600 rounded-md max-h-48 overflow-y-auto">
